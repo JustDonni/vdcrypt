@@ -1,67 +1,66 @@
-program WordEncryptor;
+program DillCrypt;
 uses
   SysUtils;
 
 type
   TCharReplacement = record
     Original: Char;
-    Substitutes: string;
+    Substitutes: array[1..2] of Char;
   end;
 
 function EncryptWord(const word: string): string;
 const
-  CharReplacements: array[0..5] of TCharReplacement = (
-    (Original: 'a'; Substitutes: '@4'),
-    (Original: 'e'; Substitutes: '3!'),
-    (Original: 'i'; Substitutes: '1|'),
-    (Original: 'o'; Substitutes: '0*'),
-    (Original: 's'; Substitutes: '$5'),
-    (Original: 't'; Substitutes: '7+')
+  Replacements: array[1..7] of TCharReplacement = (
+    (Original: 'a'; Substitutes: ('@', '4')),
+    (Original: 'e'; Substitutes: ('3', '!')),
+    (Original: 'i'; Substitutes: ('1', '|')),
+    (Original: 'o'; Substitutes: ('0', '*')),
+    (Original: 's'; Substitutes: ('$', '5')),
+    (Original: 't'; Substitutes: ('7', '+')),
+    (Original: 'f'; Substitutes: ('2', '$'))
   );
 var
-  i, j, replaceIndex: integer;
-  found: boolean;
-  currentChar: char;
-  encryptedWord: string;
+  i, j: Integer;
+  c: Char;
+  found: Boolean;
+  encrypted: string;  
 begin
-  encryptedWord := '';
+  encrypted := '';
   for i := 1 to Length(word) do
   begin
-    currentChar := word[i];
+    c := LowerCase(word[i]);
     found := False;
     
-    for j := 0 to High(CharReplacements) do
+    for j := Low(Replacements) to High(Replacements) do
     begin
-      if LowerCase(currentChar) = CharReplacements[j].Original then
+      if c = Replacements[j].Original then
       begin
-        replaceIndex := Random(Length(CharReplacements[j].Substitutes)) + 1;
-        encryptedWord := encryptedWord + CharReplacements[j].Substitutes[replaceIndex];
+        encrypted := encrypted + Replacements[j].Substitutes[Random(2) + 1];
         found := True;
         Break;
       end;
     end;
     
     if not found then
-      encryptedWord := encryptedWord + currentChar;
+      encrypted := encrypted + word[i];
   end;
-  EncryptWord := encryptedWord; 
+  EncryptWord := encrypted; 
 end;
 
 var
-  userInput: string;
+  input: string;
 begin
   Randomize;
-  
   Write('Enter word to encrypt: ');
-  Readln(userInput);
+  Readln(input);
   
-  if userInput = '' then
+  if input = '' then
   begin
-    Writeln('No input provided!');
+    Writeln('Error: No input provided');
     Exit;
   end;
   
-  Writeln('Encrypted result: ', EncryptWord(userInput));
+  Writeln('Encrypted: ', EncryptWord(input));
   Writeln('Press Enter to exit...');
   Readln;
 end.
