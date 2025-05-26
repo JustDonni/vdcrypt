@@ -4,19 +4,18 @@ uses
 
 function GeneratePassword(passwordLength: integer): string;
 const
-  ValidChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()';
+  ValidChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&;\:*()';
 var
   i: integer;
   password: string;
 begin
-  Randomize; // Initialize random number generator
+  Randomize; 
   password := '';
   
-  // Generate random password
   for i := 1 to passwordLength do
-    password := password + ValidChars[Random(Length(ValidChars)) + 1];
-  
-  GeneratePassword := password; // Return the generated password
+   password := password + ValidChars[Random(Length(ValidChars)) + 1];
+   
+  GeneratePassword := password; 
 end;
 
 var
